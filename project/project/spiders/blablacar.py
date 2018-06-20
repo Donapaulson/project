@@ -5,15 +5,13 @@ from scrapy.http import Request
 
 class BlablacarSpider(scrapy.Spider):
     name = 'blablacar'
-
     
     def start_requests(self):
-	
-    	url = 'https://www.blablacar.in/ride-sharing/new-delhi/chandigarh/#?fn=new+delhi&fcc=IN&tn=chandigarh&tcc=IN&sort=trip_date&order=asc&limit=10&page=1'
-	
     	headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
-    	yield Request(url, headers=headers, callback=self.parse)
-	
+    	start_url = 'https://www.blablacar.in/ride-sharing/new-delhi/chandigarh/?fn=new+delhi&fcc=IN&tn=chandigarh&tcc=IN&sort=trip_date&order=asc&limit=10&page='
+	for page in range(1,23):
+		yield Request(start_url+str(page),headers=headers,callback = self.parse)
+		
 
     def parse(self,response):
 	headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
@@ -64,7 +62,7 @@ class BlablacarSpider(scrapy.Spider):
 		#print 'car_color:',car_color
 	
 
-	items = {
+	data = {
 		   	"Source":source,
 		   	"Destination":dest,
 	           	"Departure_point":departure_point,
@@ -85,7 +83,7 @@ class BlablacarSpider(scrapy.Spider):
 			"Car_rating" :'',
 	           	"Car_color" :car_color
 	    	}
-	yield items
+	yield data
 	
 
 
